@@ -1,0 +1,13 @@
+[package]
+name = "ganalyzer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eframe = "0.31"
+rfd = "0.15"
+base64 = "0.21"
+image = { version = "0.25", default-features = false, features = ["png"] }
+
+[build-dependencies]
+winres = "0.1"
