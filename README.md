@@ -16,7 +16,7 @@ human-readable command descriptions.
 - Preview QOI and PNG thumbnails found in G-code files.
 - Scroll large files while keeping corresponding rows aligned.
 
-<img width="1114" height="831" alt="GAnalyzer screenshot" src="https://github.com/user-attachments/assets/36fde15c-7e63-489d-973a-65318acbf117" />
+<img width="1058" height="886" alt="GAnalyzer screenshot" src="https://github.com/user-attachments/assets/bb48d15b-8c9d-4ddd-a49a-a160e0d72be7" />
 
 
 ## Run
