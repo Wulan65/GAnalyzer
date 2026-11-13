@@ -3,7 +3,7 @@
 use base64::{engine::general_purpose, Engine as _};
 use eframe::egui::{self, Color32, ColorImage, TextureHandle};
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 const REQUIREMENTS: &str = include_str!("../docs/requirements.md");
 
@@ -337,15 +337,47 @@ fn thumbnail_marker_action(line: &str) -> Option<&str> {
     }
 }
 
+fn gcode_list_path(file_name: &str) -> Result<PathBuf, String> {
+    let executable = std::env::current_exe()
+        .map_err(|error| format!("Could not locate the application folder: {error}"))?;
+    let application_dir = executable
+        .parent()
+        .ok_or_else(|| "Could not locate the application folder".to_owned())?;
+    let development_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("docs");
+    Ok(resolve_gcode_list_path(
+        application_dir,
+        &development_path,
+        file_name,
+    ))
+}
+
+fn resolve_gcode_list_path(
+    application_dir: &Path,
+    development_dir: &Path,
+    file_name: &str,
+) -> PathBuf {
+    let application_path = application_dir.join(file_name);
+    if application_path.is_file() {
+        application_path
+    } else {
+        let development_path = development_dir.join(file_name);
+        if development_path.is_file() {
+            development_path
+        } else {
+            application_path
+        }
+    }
+}
+
 fn load_gcode_whitelist() -> Result<HashMap<String, String>, String> {
-    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("docs/gcodes whitelist.md");
+    let path = gcode_list_path("gcodes whitelist.md")?;
     let contents = std::fs::read_to_string(&path)
         .map_err(|error| format!("Could not read {}: {error}", path.display()))?;
     parse_gcode_translations(&contents).map_err(|error| format!("{}: {error}", path.display()))
 }
 
 fn load_gcode_redlist() -> Result<HashMap<String, String>, String> {
-    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("docs/gcodes redlist.md");
+    let path = gcode_list_path("gcodes redlist.md")?;
     let contents = std::fs::read_to_string(&path)
         .map_err(|error| format!("Could not read {}: {error}", path.display()))?;
     parse_gcode_translations(&contents).map_err(|error| format!("{}: {error}", path.display()))
@@ -1375,11 +1407,48 @@ impl eframe::App for GCodeViewerApp {
 mod tests {
     use super::{
         gcode_display_lines, load_gcode_redlist, load_gcode_whitelist, load_thumbnail,
-        parse_gcode_translations, translate_gcode_line, GcodeDisplayLine,
+        parse_gcode_translations, resolve_gcode_list_path, translate_gcode_line, GcodeDisplayLine,
     };
     use base64::{engine::general_purpose, Engine as _};
     use eframe::egui::Color32;
     use std::collections::HashMap;
+    use std::path::Path;
+
+    #[test]
+    fn prefers_list_files_beside_the_application() {
+        let test_dir = std::env::temp_dir().join(format!(
+            "ganalyzer-list-path-test-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("system clock should be after UNIX epoch")
+                .as_nanos()
+        ));
+        let application_dir = test_dir.join("app");
+        let development_dir = test_dir.join("docs");
+        std::fs::create_dir_all(&application_dir).expect("application test directory should exist");
+        std::fs::create_dir_all(&development_dir).expect("development test directory should exist");
+        let file_name = "gcodes whitelist.md";
+        std::fs::write(application_dir.join(file_name), "G1: Application")
+            .expect("application list should be writable");
+        std::fs::write(development_dir.join(file_name), "G1: Development")
+            .expect("development list should be writable");
+
+        assert_eq!(
+            resolve_gcode_list_path(&application_dir, &development_dir, file_name),
+            application_dir.join(file_name)
+        );
+
+        std::fs::remove_dir_all(test_dir).expect("test directories should be removable");
+        assert_eq!(
+            resolve_gcode_list_path(
+                Path::new("missing-application-directory"),
+                Path::new("missing-development-directory"),
+                file_name
+            ),
+            Path::new("missing-application-directory").join(file_name)
+        );
+    }
 
     #[test]
     fn loads_thumbnail_from_qoi_block() {

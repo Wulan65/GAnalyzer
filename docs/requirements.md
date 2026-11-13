@@ -26,8 +26,8 @@
 - Show an embedded QOI or PNG thumbnail in the toolbar without changing the toolbar or button layout.
 - Do not show the application name in the toolbar.
 - **Load:** Open a file picker for `.gcode` files, display the selected file in the left panel, and show its light-gray (#CCCCCC) name slightly to the right of **Quit**, bottom-aligned with the button.
-- Read the read-only `docs/gcodes whitelist.md` CODE-to-description mapping at each application startup so edits apply after relaunch.
-- Read `docs/gcodes redlist.md` at startup and mark matching commands in the right panel as unsupported, including their descriptions.
+- Read the read-only `gcodes whitelist.md` CODE-to-description mapping from the application folder at each startup so edits apply after relaunch. For development runs, use `docs/gcodes whitelist.md` when the file is absent beside the executable.
+- Read `gcodes redlist.md` from the application folder at startup and mark matching commands in the right panel as unsupported, including their descriptions. For development runs, use `docs/gcodes redlist.md` when the file is absent beside the executable.
 - Show translated G-code and its original parameter values in the right panel without line numbers, preserving thumbnail placeholders.
 - Render only visible G-code rows while scrolling large files.
 - Keep corresponding rows vertically aligned between panels while scrolling; keep horizontal scrolling independent in each panel.

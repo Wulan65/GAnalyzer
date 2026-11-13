@@ -86,4 +86,4 @@
 2026-11-13, 10:35: Build GAnalyzer and verify Windows icon resource integration
 2026-11-13, 10:44: Update the documented logo path after moving the SVG into assets
 2026-11-13, 10:45: Update application references to Markdown files moved into docs
-2026-11-13, 10:48: Build release executable for GitHub publication
+2026-11-13, 17:06: Load G-code lists beside the executable, with a development fallback to docs/

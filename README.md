@@ -16,9 +16,6 @@ human-readable command descriptions.
 - Preview QOI and PNG thumbnails found in G-code files.
 - Scroll large files while keeping corresponding rows aligned.
 
-<img width="1058" height="886" alt="GAnalyzer screenshot" src="https://github.com/user-attachments/assets/bb48d15b-8c9d-4ddd-a49a-a160e0d72be7" />
-
-
 ## Run
 
 Run `ganalyzer.exe` on Windows. Keep the `docs` and `assets` folders alongside
