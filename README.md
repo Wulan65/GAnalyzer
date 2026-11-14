@@ -18,7 +18,7 @@ human-readable command descriptions.
 
 <img width="1097" height="1037" alt="screenshot" src="https://github.com/user-attachments/assets/81279aa5-cd36-41a1-a8e3-71744d25712d" />
 
-Practical example: I am tuning a new slicer to work with my printer. It sends M142 which is not supported by Klipper. So I want to get rid of that. Also, there is a new code, M1234 which do not have a translation, add in files or remove from slicer.
+Practical example: I am tuning a new slicer to work with my printer. It sends M142 which is not supported by Klipper. So I want to get rid of that. Also, there is a new code, M1234 which do not have a translation, add in gcode list or remove from slicer.
 
 Note! The whitelist file is named bad I realise, it is more like "all g-codes", even the one in redlist are here. Might rename it to something else in next release.
 
