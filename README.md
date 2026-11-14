@@ -22,6 +22,9 @@ Practical example: I am tuning a new slicer to work with my printer. It sends M1
 
 Note! The whitelist file is named bad I realise, it is more like "all g-codes", even the one in redlist are here. Might rename it to something else in next release.
 
+I see now that comment in unsupported command is not in right panel, will fix that in next release.
+It could be nice to have value in other color perhaps. Might do that as well.
+
 
 ## Run
 
