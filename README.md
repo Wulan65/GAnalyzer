@@ -20,10 +20,14 @@ human-readable command descriptions.
 
 Practical example: I am tuning a new slicer to work with my printer. It sends M142 which is not supported by Klipper. So I want to get rid of that. Also, there is a new code, M1234 which do not have a translation, add in gcode list or remove from slicer.
 
-Note! The whitelist file is named bad I realise, it is more like "all g-codes", even the one in redlist are here. Might rename it to something else in next release.
+Upcoming fixes:
+
+The whitelist file is named bad I realise, it is more like "all g-codes", even the one in redlist are here. Might rename it to something else in next release.
 
 I see now that comment in unsupported command is not in right panel, will fix that in next release.
 It could be nice to have value in other color perhaps. Might do that as well.
+
+Arc fitting g-codes, G2 and G3 are not for Voron. Will add them to redlist in next version
 
 
 ## Run
