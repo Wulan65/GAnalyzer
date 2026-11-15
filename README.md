@@ -29,6 +29,8 @@ It could be nice to have value in other color perhaps. Might do that as well.
 
 Arc fitting g-codes, G2 and G3 are not for Voron. Will add them to redlist in next version
 
+Feature addon: A button to jump to next unsupported command/redlisted command could be nice
+
 
 ## Run
 
