@@ -26,7 +26,7 @@
 - Show an embedded QOI or PNG thumbnail in the toolbar without changing the toolbar or button layout.
 - Do not show the application name in the toolbar.
 - **Load:** Open a file picker for `.gcode` files, display the selected file in the left panel, and show its light-gray (#CCCCCC) name slightly to the right of **Quit**, bottom-aligned with the button.
-- Read the read-only `gcodes whitelist.md` CODE-to-description mapping from the application folder at each startup so edits apply after relaunch. For development runs, use `docs/gcodes whitelist.md` when the file is absent beside the executable.
+- Read the read-only `gcodes.md` CODE-to-description mapping from the application folder at each startup so edits apply after relaunch. For development runs, use `docs/gcodes.md` when the file is absent beside the executable.
 - Read `gcodes redlist.md` from the application folder at startup and mark matching commands in the right panel as unsupported, including their descriptions. For development runs, use `docs/gcodes redlist.md` when the file is absent beside the executable.
 - Show translated G-code and its original parameter values in the right panel without line numbers, preserving thumbnail placeholders.
 - Render only visible G-code rows while scrolling large files.
@@ -40,7 +40,7 @@
 - Render G-code text and the filename in #CCCCCC, italic line numbers in #DCDC00 on a #696D75 background followed by two #696D75 spaces, and semicolon comment lines in #66B2FF.
 - Hide sections from `; thumbnail begin` to `; thumbnail end`, from `; thumbnail_QOI begin` to `; thumbnail_QOI end`, and from `; THUMBNAIL_BLOCK_START` to `; THUMBNAIL_BLOCK_END`, preserving other line numbers and metadata that merely mentions thumbnails.
 - Replace each group of hidden thumbnail sections, separated only by blank or lone `;` lines, with one #00d659 `Thumbnail section hidden` line aligned to each panel's G-code column. Trim adjacent blank and lone `;` lines, add an unnumbered blank row above and below the placeholder, and keep the left panel's gutter the same color as the panel background.
-- For commands missing from `docs/gcodes whitelist.md`, render `No translation: ` in #fd54fd and keep the command and values in their normal text color (#CCCCCC).
+- For commands missing from `docs/gcodes.md`, render `No translation: ` in #fd54fd followed by the full original row, including any inline comment, in #CCCCCC.
 - For commands listed in `docs/gcodes redlist.md`, render `Unsupported command: ` in #ec2525, followed by the listed description and original values in their normal text color (#CCCCCC), without repeating the raw command code.
 - For translated `Linear move` commands, show `Extrude` when E has a value, `Extrude and linear move` when E and any of X/Y/Z have values, and `Retract` when any E value is negative; preserve all parameter values.
 - When needed, show a 10 px horizontal scroll bar in each panel and a vertical scroll bar only in the right panel; use 50 px minimum scroll handles and keep them within their tracks. Align the right horizontal track's left inset with the left panel's and keep the vertical scrollbar fixed during horizontal scrolling.

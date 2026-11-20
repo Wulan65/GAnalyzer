@@ -186,7 +186,7 @@ fn application_name() -> &'static str {
         .find_map(|line| line.strip_prefix("- **Application name:**"))
         .map(str::trim)
         .filter(|name| !name.is_empty())
-        .expect("docs/requirements.md must define an application name")
+        .unwrap_or("GAnalyzer")
 }
 
 #[cfg(test)]
@@ -369,8 +369,8 @@ fn resolve_gcode_list_path(
     }
 }
 
-fn load_gcode_whitelist() -> Result<HashMap<String, String>, String> {
-    let path = gcode_list_path("gcodes whitelist.md")?;
+fn load_gcode_translations() -> Result<HashMap<String, String>, String> {
+    let path = gcode_list_path("gcodes.md")?;
     let contents = std::fs::read_to_string(&path)
         .map_err(|error| format!("Could not read {}: {error}", path.display()))?;
     parse_gcode_translations(&contents).map_err(|error| format!("{}: {error}", path.display()))
@@ -566,7 +566,7 @@ fn translate_gcode_line(
         if let Some(description) = translations.get(&command.to_ascii_uppercase()) {
             (description.clone(), false)
         } else {
-            (format!("No translation: {command}"), true)
+            (format!("No translation: {}", line.trim()), true)
         };
     let description = if !missing_translation && description.eq_ignore_ascii_case("Linear move") {
         linear_move_extrusion_description(parameters)
@@ -575,7 +575,7 @@ fn translate_gcode_line(
     } else {
         description
     };
-    let text = if parameters.is_empty() {
+    let text = if missing_translation || parameters.is_empty() {
         description
     } else {
         format!("{description} {parameters}")
@@ -776,7 +776,12 @@ fn render_gcode_rows(
 fn main() -> eframe::Result<()> {
     let name = application_name();
     let icon = image::load_from_memory(include_bytes!("../assets/ganalyzer.png"))
-        .expect("embedded application icon must be a valid PNG")
+        .map_err(|error| {
+            eframe::Error::AppCreation(Box::new(std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                format!("embedded application icon is invalid: {error}"),
+            )))
+        })?
         .to_rgba8();
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
@@ -825,7 +830,7 @@ struct GCodeViewerApp {
 impl Default for GCodeViewerApp {
     fn default() -> Self {
         let mut config_errors = Vec::new();
-        let gcode_translations = match load_gcode_whitelist() {
+        let gcode_translations = match load_gcode_translations() {
             Ok(entries) => entries,
             Err(error) => {
                 config_errors.push(error);
@@ -1406,7 +1411,7 @@ impl eframe::App for GCodeViewerApp {
 #[cfg(test)]
 mod tests {
     use super::{
-        gcode_display_lines, load_gcode_redlist, load_gcode_whitelist, load_thumbnail,
+        gcode_display_lines, load_gcode_redlist, load_gcode_translations, load_thumbnail,
         parse_gcode_translations, resolve_gcode_list_path, translate_gcode_line, GcodeDisplayLine,
     };
     use base64::{engine::general_purpose, Engine as _};
@@ -1428,7 +1433,7 @@ mod tests {
         let development_dir = test_dir.join("docs");
         std::fs::create_dir_all(&application_dir).expect("application test directory should exist");
         std::fs::create_dir_all(&development_dir).expect("development test directory should exist");
-        let file_name = "gcodes whitelist.md";
+        let file_name = "gcodes.md";
         std::fs::write(application_dir.join(file_name), "G1: Application")
             .expect("application list should be writable");
         std::fs::write(development_dir.join(file_name), "G1: Development")
@@ -1484,11 +1489,11 @@ mod tests {
     }
 
     #[test]
-    fn loads_whitelist_and_redlist_files() {
-        let whitelist = load_gcode_whitelist().expect("G-code whitelist should load");
+    fn loads_translation_and_redlist_files() {
+        let translations = load_gcode_translations().expect("G-code translations should load");
         let redlist = load_gcode_redlist().expect("G-code redlist should load");
 
-        assert!(whitelist.contains_key("G1"));
+        assert!(translations.contains_key("G1"));
         assert_eq!(redlist.get("G5").map(String::as_str), Some("Spline move"));
     }
 
@@ -1606,6 +1611,17 @@ mod tests {
         let missing = translate_gcode_line("G999 X10", &translations, &redlisted_commands);
         assert_eq!(missing.text, "No translation: G999 X10");
         assert!(missing.missing_translation);
+
+        let missing_with_comment = translate_gcode_line(
+            "M101 H666 ; Test with unknown command",
+            &translations,
+            &redlisted_commands,
+        );
+        assert_eq!(
+            missing_with_comment.text,
+            "No translation: M101 H666 ; Test with unknown command"
+        );
+        assert!(missing_with_comment.missing_translation);
     }
 
     #[test]

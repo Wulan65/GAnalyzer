@@ -1,4 +1,6 @@
 ##: Comment, wrong format
+G2: Clockwise arc
+G3: Counterclockwise arc
 G5: Spline move
 G6: Direct step move
 G26: Mesh validation
@@ -159,6 +161,7 @@ M552: Set network IP
 M553: Set network subnet
 M554: Set network gateway
 M569: Set TMC step mode
+M572: Set Pressure Advance
 M575: Set serial baud rate
 M592: Set nonlinear E
 M593: Set input shaping

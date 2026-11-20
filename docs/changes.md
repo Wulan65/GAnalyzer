@@ -87,3 +87,10 @@
 2026-11-13, 10:44: Update the documented logo path after moving the SVG into assets
 2026-11-13, 10:45: Update application references to Markdown files moved into docs
 2026-11-13, 17:06: Load G-code lists beside the executable, with a development fallback to docs/
+2026-11-20, 18:25: Use gcodes.md and show the full original row for missing translations
+2026-11-20, 18:26: Fix duplicate parameters in missing-translation rows
+2026-11-20, 18:26: Run focused translation regression test
+2026-11-20, 18:26: Build application after G-code mapping and display updates
+2026-11-20, 18:45: Enforce Rust safety lints and remove startup panic paths
+2026-11-20, 18:48: Replace PNG fixture test with self-contained thumbnail data
+2026-11-20, 18:53: Restore real Cone G-code PNG thumbnail regression test
