@@ -16,7 +16,7 @@ human-readable command descriptions.
 - Preview QOI and PNG thumbnails found in G-code files.
 - Scroll large files while keeping corresponding rows aligned.
 
-<img width="1097" height="1037" alt="screenshot" src="https://github.com/user-attachments/assets/81279aa5-cd36-41a1-a8e3-71744d25712d" />
+<img width="1047" height="1038" alt="screenshot" src="https://github.com/user-attachments/assets/d9b207a8-ee06-4735-9bdd-2fcd423f3dc2" />
 
 Practical example: I am tuning a new slicer to work with my printer. It sends M142 which is not supported by Klipper. So I want to get rid of that. Also, there is a new code, M1234 which do not have a translation, add in gcode list or remove from slicer.
 
